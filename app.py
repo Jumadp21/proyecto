@@ -3,8 +3,12 @@ import cv2
 import numpy as np
 from io import BytesIO
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+# Activar CORS globalmente
+CORS(app)
 
 # Permitir CORS para Flutter Web
 @app.after_request
@@ -27,7 +31,7 @@ def apply_filter():
         npimg = np.frombuffer(file.read(), np.uint8)
         img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
         
-        # Aplicar filtro según tipo
+        # Aplicar filtros
         if filter_type == 'blur':
             filtered_img = cv2.GaussianBlur(img, (15, 15), 0)
         elif filter_type == 'gray':
@@ -55,4 +59,4 @@ def health():
     return {'status': 'OK'}, 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
